@@ -71,9 +71,11 @@ class GeniusAudioParser:
     
     def is_translation_artist(self, artist_name: str) -> bool:
         """
-        Checks if artist's name is "genius english translation" (or any other alternatives). This official genius account naming 
-        is usually found first, before the original song. Therefore, the artist name will be "Genius ..." 
-        This issue is mainly for foreign songs (in my case spanish)
+        Checks if artist's name is/contains "genius english translation" (or any other alternatives).
+        Genius has official accounts that translate songs in other languages. These accounts are categorized as artists.
+        Therefore, oftentimes it happens that the first artist found is "Genius english translation" or similar names. 
+        (long story short, the translated version is found before the original one)
+        So, we have to skip the songs assigned to these artists.
         """
         translation_indicators = [
             "genius english translations",
