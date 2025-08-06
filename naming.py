@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from dotenv import load_dotenv
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -50,6 +51,7 @@ class GeniusAudioParser:
             "]"
         ]
 
+    
     def clean_search_query(self, filename: str) -> str:
         """Clean up filename for better Genius search results"""
         import re
@@ -111,8 +113,10 @@ class GeniusAudioParser:
                 candidates = []
                 for hit in data["response"]["hits"][:3]:
                     song_info = hit["result"]
+                    print(json.dumps(song_info, indent=2))
                     artist_name = song_info["primary_artist"]["name"]
-
+                    #basic_album = song_info.get("album", {}).get("name") if song_info.get("album") else None
+                    #fix album
                     if self.is_translation_artist(artist_name):
                         #print(f"Skipping translation {song_info['title']} - {artist_name}")
                         continue
@@ -120,9 +124,7 @@ class GeniusAudioParser:
                         candidate = {
                             "title": song_info["title"],
                             "artist": artist_name,
-
-                            "release_date": song_info.get("release_date_for_display"),
-                            "album": song_info.get("album", {}).get("name") if song_info.get("album") else None,
+                            "album": song_info.get("album"),
                             "featured_artists": [artist["name"] for artist in song_info.get("featured_artists", [])],
                             "pageviews": song_info.get("stats", {}).get("pageviews", 0)
                         }
@@ -173,8 +175,7 @@ class GeniusAudioParser:
 
     def save_to_csv(self, results: List[Dict], output_path: str):
         """Save results to CSV file"""
-        fieldnames = ['filepath', 'artist', 'title', 'album', 
-                     'release_date', 'featured_artists']
+        fieldnames = ['filepath', 'artist', 'title', 'album',  'featured_artists']
         
         with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames,extrasaction='ignore')
