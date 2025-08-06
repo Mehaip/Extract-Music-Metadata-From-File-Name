@@ -5,11 +5,7 @@ import csv
 import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-from dotenv import load_dotenv
-import json
 
-# Load environment variables from .env file
-load_dotenv()
 
 class GeniusAudioParser:
     def __init__(self, genius_token: str):
@@ -113,26 +109,25 @@ class GeniusAudioParser:
                 candidates = []
                 for hit in data["response"]["hits"][:3]:
                     song_info = hit["result"]
-                    print(json.dumps(song_info, indent=2))
                     artist_name = song_info["primary_artist"]["name"]
                     #basic_album = song_info.get("album", {}).get("name") if song_info.get("album") else None
-                    #fix album
+                    #Check if the data is a translated version of the song (if it is, skip)
                     if self.is_translation_artist(artist_name):
                         #print(f"Skipping translation {song_info['title']} - {artist_name}")
                         continue
-                    else:
+                    else: #Found the original song
                         candidate = {
                             "title": song_info["title"],
                             "artist": artist_name,
                             "album": song_info.get("album"),
                             "featured_artists": [artist["name"] for artist in song_info.get("featured_artists", [])],
-                            "pageviews": song_info.get("stats", {}).get("pageviews", 0)
+                            "pageviews": song_info.get("stats", {}).get("pageviews", 0) #pageviews for sorting by popularity (we can avoid remixes, covers, etc...)
                         }
 
                         candidates.append(candidate)
-                    #sort candidates by pageviews
+            #sort candidates by pageviews
             if candidates:
-                sorted_candidates = sorted(candidates, key=lambda x: x["pageviews"], reverse=True)
+                sorted_candidates = sorted(candidates, key=lambda x: x["pageviews"], reverse=True) #sort by most popular (for now), maybe will need a revisit
                 best_find = sorted_candidates[0]
                 print(f"FOUND SONG: Title: {best_find['title']} ||| Artist: {best_find['artist']}")
                 return best_find
@@ -187,50 +182,3 @@ class GeniusAudioParser:
         """Save results to JSON file"""
         with open(output_path, 'w', encoding='utf-8') as jsonfile:
             json.dump(results, jsonfile, indent=2, ensure_ascii=False)
-
- 
-
-def main():
-    print("Genius API Audio File Parser")
-    print("=" * 40)
-    
-    # Get Genius API token from environment variable
-    genius_token = os.getenv('GENIUS_API_TOKEN')
-    if not genius_token:
-        print("Error: GENIUS_API_TOKEN not found in environment variables!")
-        print("Please create a .env file with your token:")
-        print("GENIUS_API_TOKEN=your_token_here")
-        print("\nGet a token free at: https://genius.com/api-clients")
-        return
-    
-    # Get folder path
-    folder_path = os.getenv('FOLDER_PATH')
-    if not os.path.exists(folder_path):
-        print(f"Error: Folder '{folder_path}' does not exist!")
-        return
-    
-    # Initialize parser
-    parser = GeniusAudioParser(genius_token)
-    
-    # Process files
-    print("\nStarting processing...")
-    results = parser.process_folder(folder_path)
-    
-    if not results:
-        print("No audio files found in the specified folder!")
-        return
-    findings = []
-    for song_name in results:
-        findings.append(parser.search_genius(song_name))
-    
-    
-    # Save results
-    csv_path = os.path.join("db/", 'genius_audio_database.csv')
-    json_path = os.path.join("db/", 'genius_audio_database.json')
-    
-    parser.save_to_csv(findings, csv_path)
-    parser.save_to_json(findings, json_path)
-
-
-if __name__ == "__main__":
-    main()
