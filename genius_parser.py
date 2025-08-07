@@ -36,7 +36,8 @@ class GeniusAudioParser:
             r'\s*\|\s*YouTube$',
             r'\s*(128kbit_AAC)',
             r'\s*(152kbit_Opus)',
-            r'\s*(160kbit_Opus)'
+            r'\s*(160kbit_Opus)',
+            r'^\d\d' #01 02 03 at the start of the string (oftentimes found in album downloaded media)
         ]
 
         self.characters_to_remove = [
@@ -66,6 +67,7 @@ class GeniusAudioParser:
         
         # Remove extra whitespace
         query = ' '.join(query.split())
+        print(query)
         return query.strip()
     
     def is_translation_artist(self, artist_name: str) -> bool:
@@ -129,7 +131,7 @@ class GeniusAudioParser:
                             "title": song_info["title"],
                             "artist": artist_name,
                             "album": album.get('name') if album else None,
-                            "album_genius_id": "hehe",
+                            "album_genius_id": album.get('id') if album else None,
                             "featured_artists": [artist["name"] for artist in song_info.get("featured_artists", [])],
                             "filepath":song_filepath,
                             "pageviews": song_info.get("stats", {}).get("pageviews", 0) #pageviews for sorting by popularity (we can avoid remixes, covers, etc...)
