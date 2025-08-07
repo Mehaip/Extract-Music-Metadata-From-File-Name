@@ -5,6 +5,7 @@ import csv
 import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+from lyricsgenius import Genius
 
 
 class GeniusAudioParser:
@@ -16,7 +17,7 @@ class GeniusAudioParser:
         self.genius_token = genius_token
         self.base_url = "https://api.genius.com"
         self.headers = {"Authorization": f"Bearer {genius_token}"}
-        
+        self.genius = Genius(genius_token)
         # Common YouTube suffixes to clean up search queries
         self.cleanup_patterns = [
             r'\s*\(official.*?\)',
@@ -101,6 +102,8 @@ class GeniusAudioParser:
         params = {"q": song_query}
         
         try:
+
+
             response = requests.get(search_url, headers=self.headers, params=params)
             response.raise_for_status()
             
@@ -112,16 +115,21 @@ class GeniusAudioParser:
                 for hit in data["response"]["hits"][:3]:
                     song_info = hit["result"]
                     artist_name = song_info["primary_artist"]["name"]
-                    #basic_album = song_info.get("album", {}).get("name") if song_info.get("album") else None
                     #Check if the data is a translated version of the song (if it is, skip)
                     if self.is_translation_artist(artist_name):
                         #print(f"Skipping translation {song_info['title']} - {artist_name}")
                         continue
                     else: #Found the original song
+                        song_complete_data = self.genius.song(song_info["id"])
+                       ## print("="*40)
+                       ## print(song_complete_data)
+                       ## print("="*40)
+                        album = (song_complete_data or {}).get('song', {}).get('album')
                         candidate = {
                             "title": song_info["title"],
                             "artist": artist_name,
-                            "album": song_info.get("album"),
+                            "album": album.get('name') if album else None,
+                            "album_genius_id": "hehe",
                             "featured_artists": [artist["name"] for artist in song_info.get("featured_artists", [])],
                             "filepath":song_filepath,
                             "pageviews": song_info.get("stats", {}).get("pageviews", 0) #pageviews for sorting by popularity (we can avoid remixes, covers, etc...)
@@ -176,7 +184,7 @@ class GeniusAudioParser:
 
     def save_to_csv(self, results: List[Dict], output_path: str):
         """Save results to CSV file"""
-        fieldnames = ['filepath', 'artist', 'title', 'album',  'featured_artists']
+        fieldnames = ['filepath', 'artist', 'title', 'album', 'album_genius_id',  'featured_artists']
         
         with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames,extrasaction='ignore')
