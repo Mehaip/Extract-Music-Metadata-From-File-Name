@@ -193,8 +193,3 @@ class GeniusAudioParser:
             writer.writeheader()
             for result in results:
                 writer.writerow(result)
-
-    def save_to_json(self, results: List[Dict], output_path: str):
-        """Save results to JSON file"""
-        with open(output_path, 'w', encoding='utf-8') as jsonfile:
-            json.dump(results, jsonfile, indent=2, ensure_ascii=False)

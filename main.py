@@ -39,11 +39,11 @@ def main():
     
     
     # Save results
-    csv_path = os.path.join("db/", 'genius_audio_database.csv')
-    json_path = os.path.join("db/", 'genius_audio_database.json')
+    database_path = os.getenv("DATABASE_PATH", 'db/')
+    os.makedirs(database_path, exist_ok=True)
+    csv_path = os.path.join(database_path, 'songs.csv')
     
     parser.save_to_csv(findings, csv_path)
-    parser.save_to_json(findings, json_path)
 
 
 if __name__ == "__main__":
