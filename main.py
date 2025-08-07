@@ -30,13 +30,13 @@ def main():
     
     # Process files
     results = parser.process_folder(folder_path)
-    
+    print(results)
     if not results:
         print("No audio files found in the specified folder!")
         return
     findings = []
-    for song_name in results:
-        findings.append(parser.search_genius(song_name))
+    for song_data in results:
+        findings.append(parser.search_genius(song_data))
     
     
     # Save results

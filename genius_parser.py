@@ -54,7 +54,6 @@ class GeniusAudioParser:
         
         # Remove file extension
         query = Path(filename).stem
-        print(query)
         # Apply cleanup patterns to remove common YouTube cruft
         for pattern in self.cleanup_patterns:
             query = re.sub(pattern, '', query, flags=re.IGNORECASE)
@@ -66,7 +65,6 @@ class GeniusAudioParser:
         
         # Remove extra whitespace
         query = ' '.join(query.split())
-        print (f"FINAL QUERY: {query}")
         return query.strip()
     
     def is_translation_artist(self, artist_name: str) -> bool:
@@ -92,13 +90,15 @@ class GeniusAudioParser:
         artist_lower = artist_name.lower()
         return any(indicator in artist_lower for indicator in translation_indicators)
 
-    def search_genius(self, query: str) -> Optional[Dict]:
+    def search_genius(self, song_data: Dict) -> Optional[Dict]:
         """
         Search Genius API for a song
         Returns the best match or None if no good match found
         """
+        song_filepath = song_data["filepath"]
+        song_query = song_data["search_query"]
         search_url = f"{self.base_url}/search"
-        params = {"q": query}
+        params = {"q": song_query}
         
         try:
             response = requests.get(search_url, headers=self.headers, params=params)
@@ -123,6 +123,7 @@ class GeniusAudioParser:
                             "artist": artist_name,
                             "album": song_info.get("album"),
                             "featured_artists": [artist["name"] for artist in song_info.get("featured_artists", [])],
+                            "filepath":song_filepath,
                             "pageviews": song_info.get("stats", {}).get("pageviews", 0) #pageviews for sorting by popularity (we can avoid remixes, covers, etc...)
                         }
 
@@ -135,16 +136,16 @@ class GeniusAudioParser:
                 return best_find
                 
             
-            print(f"Not found {query}")
+            print(f"Not found {song_query}")
             return None
             
         except requests.exceptions.RequestException as e:
-            print(f"Error searching for '{query}': {e}")
+            print(f"Error searching for '{song_query}': {e}")
             return None
 
     def process_folder(self, folder_path: str, audio_extensions: List[str] = None, delay: float = 0.5) -> List[Dict]:
         """
-        Process all audio files in a folder using Genius API
+        Process all audio files in a folder
         
         Args:
             folder_path: Path to folder containing audio files
@@ -158,7 +159,7 @@ class GeniusAudioParser:
         folder = Path(folder_path)
         
         audio_files = [f for f in folder.iterdir() 
-                      if f.is_file() and f.suffix.lower() in audio_extensions]
+                      if f.is_file() and f.suffix.lower() in audio_extensions] #we add only the audio files that have the specific audio_extensions that are in the folder
         
         print(f"Found {len(audio_files)} audio files to process...")
         
@@ -166,8 +167,11 @@ class GeniusAudioParser:
             print(f"Processing {i}/{len(audio_files)}: {file_path.name}")
             
             search_query = self.clean_search_query(file_path.name)
-            print(search_query)
-            results.append(search_query)
+            complete_data = {
+                "filepath": file_path.absolute(),
+                "search_query":search_query
+            }
+            results.append(complete_data)
         return results
 
     def save_to_csv(self, results: List[Dict], output_path: str):
