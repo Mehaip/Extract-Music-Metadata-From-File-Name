@@ -1,10 +1,10 @@
 # Genius Audio Parser
 
-A Python script that automatically identifies and organizes your music collection by extracting metadata from audio filenames using the Genius API.
+A Python script that organizes your music collection by extracting metadata from audio filenames using the Genius API.
 
 ## Problem It Solves
 
-YouTube songs often follow inconsistent naming formats:
+YouTube songs oftentimes follow inconsistent naming formats:
 
 - `artistName - title`
 - `title - artistName`
@@ -13,7 +13,10 @@ YouTube songs often follow inconsistent naming formats:
 - `Song Name (Official Audio) - YouTube`
 - `Artist - Song (128kbit_AAC)`
 
-This script cleans these filenames, searches the Genius API for proper metadata, and organizes everything in a structured format.
+This script cleans these filenames, searches the Genius API for proper metadata, and organizes everything in a structured format. (.csv and .db for now)
+
+eg: 
+`Emmanuel cortes- amor` -> `emmanuel cortes amor` -> Genius API -> beautiful sexy json format
 
 ## Features
 
