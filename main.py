@@ -30,7 +30,6 @@ def main():
     
     # Process files
     results = parser.process_folder(folder_path)
-    print(results)
     if not results:
         print("No audio files found in the specified folder!")
         return
