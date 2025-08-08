@@ -39,8 +39,8 @@ def main():
     
     # Change file metadata & naming
 
-    modifier = MetadataModifier("music/in_rainbow/01 - Radiohead - 15 Step.MP3",123)
-    modifier.mp3Modifier()
+   # modifier = MetadataModifier("music/in_rainbow/01 - Radiohead - 15 Step.MP3",123)
+   # modifier.mp3Modifier()
 
 
     # Save results
