@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
-from genius_parser import GeniusAudioParser
-
+from audio_organizer import AudioOrganizer
+from metadata_modifier import MetadataModifier
 # Load environment variables from .env file
 load_dotenv()
 
@@ -26,24 +26,29 @@ def main():
         return
     
     # Initialize parser
-    parser = GeniusAudioParser(genius_token)
+    organizer = AudioOrganizer(genius_token)
     
     # Process files
-    results = parser.process_folder(folder_path)
+    results = organizer.process_folder(folder_path)
     if not results:
         print("No audio files found in the specified folder!")
         return
     findings = []
     for song_data in results:
-        findings.append(parser.search_genius(song_data))
+        findings.append(organizer.search_genius(song_data))
     
-    
+    # Change file metadata & naming
+
+    modifier = MetadataModifier("music/in_rainbow/01 - Radiohead - 15 Step.MP3",123)
+    modifier.mp3Modifier()
+
+
     # Save results
     database_path = os.getenv("DATABASE_PATH", 'db/')
     os.makedirs(database_path, exist_ok=True)
     csv_path = os.path.join(database_path, 'songs.csv')
     
-    parser.save_to_csv(findings, csv_path)
+    organizer.save_to_csv(findings, csv_path)
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Tuple
 from lyricsgenius import Genius
 
 
-class GeniusAudioParser:
+class AudioOrganizer:
     def __init__(self, genius_token: str):
         """
         Initialize with your Genius API token
@@ -37,7 +37,7 @@ class GeniusAudioParser:
             r'\s*(128kbit_AAC)',
             r'\s*(152kbit_Opus)',
             r'\s*(160kbit_Opus)',
-            r'^\d\d' #01 02 03 at the start of the string (oftentimes found in album downloaded media)
+            r'^\d\d' #01 02 03 at the start of the string 
         ]
 
         self.characters_to_remove = [
@@ -56,27 +56,24 @@ class GeniusAudioParser:
         
         # Remove file extension
         query = Path(filename).stem
-        # Apply cleanup patterns to remove common YouTube cruft
+
         for pattern in self.cleanup_patterns:
             query = re.sub(pattern, '', query, flags=re.IGNORECASE)
 
-        # Elements to remove
-        
         for char in self.characters_to_remove:
             query = query.replace(char,"")
         
-        # Remove extra whitespace
         query = ' '.join(query.split())
         print(query)
         return query.strip()
     
     def is_translation_artist(self, artist_name: str) -> bool:
         """
-        Checks if artist's name is/contains "genius english translation" (or any other alternatives).
-        Genius has official accounts that translate songs in other languages. These accounts are categorized as artists.
-        Therefore, oftentimes it happens that the first artist found is "Genius english translation" or similar names. 
-        (long story short, the translated version is found before the original one)
-        So, we have to skip the songs assigned to these artists.
+        Checks if artist's name indicates a Genius translation account rather than an original artist.
+        Genius has official translation accounts (e.g. "Genius English Translations") that appear as separate
+        "artists" in their database. When searching for songs, oftentimes they appear in the results before
+        the original artist's version 
+        So we have to skip the songs assigned to these artists.
         """
         translation_indicators = [
             "genius english translations",
@@ -97,6 +94,13 @@ class GeniusAudioParser:
         """
         Search Genius API for a song
         Returns the best match or None if no good match found
+        Using the query, it takes the first 3 songs from Genius, skips the translated version (if it exists) and returns the most popular
+        song. We can suppose that the most viewed is the song we're looking for, but obviously the result may not be the one we want.
+        This issue may happen when it comes to remixes/covers/etc (variants of the song way less popular than the original one)
+        For those types of songs we may need a revamp of this function >:(
+        
+        Args:
+            song_data: dict that has filepath to the song and search_query
         """
         song_filepath = song_data["filepath"]
         song_query = song_data["search_query"]
@@ -112,16 +116,16 @@ class GeniusAudioParser:
             data = response.json()
             
             if data["response"]["hits"]:
-                # Get the first (best) results
+                
                 candidates = []
                 for hit in data["response"]["hits"][:3]:
                     song_info = hit["result"]
                     artist_name = song_info["primary_artist"]["name"]
-                    #Check if the data is a translated version of the song (if it is, skip)
+                    
                     if self.is_translation_artist(artist_name):
                         #print(f"Skipping translation {song_info['title']} - {artist_name}")
                         continue
-                    else: #Found the original song
+                    else: 
                         song_complete_data = self.genius.song(song_info["id"])
                        ## print("="*40)
                        ## print(song_complete_data)
@@ -134,13 +138,13 @@ class GeniusAudioParser:
                             "album_genius_id": album.get('id') if album else None,
                             "featured_artists": [artist["name"] for artist in song_info.get("featured_artists", [])],
                             "filepath":song_filepath,
-                            "pageviews": song_info.get("stats", {}).get("pageviews", 0) #pageviews for sorting by popularity (we can avoid remixes, covers, etc...)
+                            "pageviews": song_info.get("stats", {}).get("pageviews", 0) #pageviews for sorting by popularity
                         }
 
                         candidates.append(candidate)
-            #sort candidates by pageviews
+            
             if candidates:
-                sorted_candidates = sorted(candidates, key=lambda x: x["pageviews"], reverse=True) #sort by most popular (for now), maybe will need a revisit
+                sorted_candidates = sorted(candidates, key=lambda x: x["pageviews"], reverse=True)
                 best_find = sorted_candidates[0]
                 print(f"FOUND SONG: Title: {best_find['title']} ||| Artist: {best_find['artist']}")
                 return best_find

@@ -16,7 +16,7 @@ YouTube songs oftentimes follow inconsistent naming formats:
 This script cleans these filenames, searches the Genius API for proper metadata, and organizes everything in a structured format. (.csv and .db for now)
 
 eg: 
-`Emmanuel cortes- amor` -> `emmanuel cortes amor` -> Genius API -> beautiful sexy json format
+`Emmanuel Cortes- Amor (Official Video) (160kbit_Opus).opus` -> `emmanuel cortes amor` -> Genius API -> beautiful sexy json format for the song
 
 ## Features
 
