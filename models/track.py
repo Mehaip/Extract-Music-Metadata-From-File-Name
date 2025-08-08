@@ -1,5 +1,6 @@
 from django.db import models
 from pathlib import Path
+from .album import Album
 
 class Track(models.Model):
     filepath = models.CharField(max_length=500)

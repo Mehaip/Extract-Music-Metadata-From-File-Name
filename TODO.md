@@ -1,5 +1,6 @@
 ##  Current Tasks
 
+- [ ] **Decide on table structure**
 - [ ] **Implement sqlite storage (DjangoORM)**
 - [ ] **Separate tracks, albums, artists, playlists by classes**
 - [ ] **File Metadata & filename modifier**
