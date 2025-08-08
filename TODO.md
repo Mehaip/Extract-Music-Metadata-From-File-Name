@@ -1,22 +1,24 @@
-Important/essential (Current tasks):
+##  Current Tasks
 
-- Implement sqlite storage (ORM)
-- separate tracks, albums, artists, playlists by classes
-- File Metadata & filename modifier
+- [ ] **Implement sqlite storage (ORM)**
+- [ ] **Separate tracks, albums, artists, playlists by classes**
+- [ ] **File Metadata & filename modifier**
 
-Necessary but not urgent (next tasks after i finish current tasks):
+## Next Tasks (Replace once all current tasks are done)
 
-- album track order (genius.album_tracks)
-- add tests
-- test folder path variety/adaptability
-- add stats (how many songs not found, what songs are not found, what are their names)
-- add manual song naming (worst case scenario)
+- [ ] **Album track order** (using `genius.album_tracks`)
+- [ ] **Add tests**
+- [ ] **Test folder path variety/adaptability**
+- [ ] **Add stats** (how many songs not found, what songs are not found, what are their names)
+- [ ] **Summary reports**
+- [ ] **Add log file**
+- [ ] **Manual song naming** (worst case scenario)
 
-Finished:
+## ✅ Finished
 
-- track -  album association
-- track - filepath association
+- [x] **Track - album association**
+- [x] **Track - filepath association**
 
+##  In the far future
 
-In the far future:
-- study remixes/covers
+- [ ] **Study remixes/covers**
