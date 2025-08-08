@@ -1,9 +1,10 @@
 from mutagen import File
 from mutagen.easyid3 import EasyID3 
 from mutagen.mp3 import MP3
+from pathlib import Path
 
 class MetadataModifier:
-    def __init__(self, audio_filepath: str, song_genius_id):
+    def __init__(self, audio_filepath: Path, song_genius_id):
         self.audio_filepath = audio_filepath
         self.song_genius_id = song_genius_id
 

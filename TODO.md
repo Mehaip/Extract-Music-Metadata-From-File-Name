@@ -1,11 +1,12 @@
 ##  Current Tasks
 
-- [ ] **Implement sqlite storage (ORM)**
+- [ ] **Implement sqlite storage (DjangoORM)**
 - [ ] **Separate tracks, albums, artists, playlists by classes**
 - [ ] **File Metadata & filename modifier**
 
 ## Next Tasks (Replace once all current tasks are done)
 
+- [ ] **File naming format can be made by user**
 - [ ] **Album track order** (using `genius.album_tracks`)
 - [ ] **Add tests**
 - [ ] **Test folder path variety/adaptability**

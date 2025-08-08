@@ -190,7 +190,7 @@ class AudioOrganizer:
 
     def save_to_csv(self, results: List[Dict], output_path: str):
         """Save results to CSV file"""
-        fieldnames = ['filepath', 'artist', 'title', 'album', 'album_genius_id',  'featured_artists']
+        fieldnames = ['filepath', 'title', 'artist', 'album', 'album_genius_id',  'featured_artists']
         
         with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames,extrasaction='ignore')
