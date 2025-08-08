@@ -127,16 +127,25 @@ class AudioOrganizer:
                         continue
                     else: 
                         song_complete_data = self.genius.song(song_info["id"])
-                       ## print("="*40)
-                       ## print(song_complete_data)
-                       ## print("="*40)
+                        ##print("="*40)
+                        ##print(song_complete_data)
+                        ##print("="*40)
                         album = (song_complete_data or {}).get('song', {}).get('album')
+                        primary_artists_response = song_complete_data['song']['primary_artists']
+                        primary_artists = []
+                        for primary_artist in primary_artists_response:
+                            primary_artists.append(primary_artist["name"])
+
+                        featured_artists_response  = song_complete_data["song"]["featured_artists"]
+                        featured_artists = []
+                        for featured_artist in featured_artists_response:
+                            featured_artists.append(featured_artist["name"])
                         candidate = {
                             "title": song_info["title"],
                             "artist": artist_name,
                             "album": album.get('name') if album else None,
                             "album_genius_id": album.get('id') if album else None,
-                            "featured_artists": [artist["name"] for artist in song_info.get("featured_artists", [])],
+                            "featured_artists": primary_artists[1:] if primary_artists[1:] else featured_artists,
                             "filepath":song_filepath,
                             "pageviews": song_info.get("stats", {}).get("pageviews", 0) #pageviews for sorting by popularity
                         }

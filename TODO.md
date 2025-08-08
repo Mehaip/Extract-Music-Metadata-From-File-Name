@@ -1,6 +1,6 @@
 ##  Current Tasks
 
-- [ ] **Decide on table structure**
+- [ ] **Decide on table structure**`
 - [ ] **Implement sqlite storage (DjangoORM)**
 - [ ] **Separate tracks, albums, artists, playlists by classes**
 - [ ] **File Metadata & filename modifier**
@@ -15,6 +15,9 @@
 - [ ] **Summary reports**
 - [ ] **Add log file**
 - [ ] **Manual song naming** (worst case scenario)
+
+## Problems (stuff idk how to solve)
+- [ ] **Featured artists**
 
 ## ✅ Finished
 
