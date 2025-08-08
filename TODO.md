@@ -1,11 +1,22 @@
-1. Fix album issue [x]
-1.2 Add album track order (genius.album_tracks)
-2. associate file path with each song in the db [x]
-3. Add statistics (how many songs found how many not found, etc...)
-4. try with a global folder
-5. TESTSS!!
-6. change song metadata using the db data
+Important/essential (Current tasks):
+
+- Implement sqlite storage (ORM)
+- separate tracks, albums, artists, playlists by classes
+- File Metadata & filename modifier
+
+Necessary but not urgent (next tasks after i finish current tasks):
+
+- album track order (genius.album_tracks)
+- add tests
+- test folder path variety/adaptability
+- add stats (how many songs not found, what songs are not found, what are their names)
+- add manual song naming (worst case scenario)
+
+Finished:
+
+- track -  album association
+- track - filepath association
 
 
-todo in the far future:
-1. study remixes/covers
+In the far future:
+- study remixes/covers
