@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from audio_organizer import AudioOrganizer
 from metadata_modifier import MetadataModifier
+import sqlite3
 # Load environment variables from .env file
 load_dotenv()
 
@@ -36,7 +37,8 @@ def main():
     findings = []
     for song_data in results:
         findings.append(organizer.search_genius(song_data))
-    
+    print(type(findings[0]))
+    print(findings[0])
     # Change file metadata & naming
 
    # modifier = MetadataModifier("music/in_rainbow/01 - Radiohead - 15 Step.MP3",123)

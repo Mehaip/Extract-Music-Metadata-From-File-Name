@@ -131,6 +131,7 @@ class AudioOrganizer:
                         ##print(song_complete_data)
                         ##print("="*40)
                         album = (song_complete_data or {}).get('song', {}).get('album')
+                        
                         primary_artists_response = song_complete_data['song']['primary_artists']
                         primary_artists = []
                         for primary_artist in primary_artists_response:
@@ -199,7 +200,7 @@ class AudioOrganizer:
 
     def save_to_csv(self, results: List[Dict], output_path: str):
         """Save results to CSV file"""
-        fieldnames = ['filepath', 'title', 'artist', 'album', 'album_genius_id',  'featured_artists']
+        fieldnames = ['filepath', 'title', 'artist', 'album',  'featured_artists']
         
         with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames,extrasaction='ignore')

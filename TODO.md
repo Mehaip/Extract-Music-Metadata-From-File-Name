@@ -29,3 +29,11 @@
 ##  In the far future
 
 - [ ] **Study remixes/covers**
+- [ ] **Use incomplete album philosophy + "would you like to download the whole album?" feature**
+
+Album implementation:
+We will do the following:
+Whether an album is in the database or not will be strictly the user's decision
+When inserting the song, check if the album's song is in the database.
+If it is, associate the songs album id to the album id.
+If it isn't, consider the song a single. The song's album id can be either NULL or I can create a "single" album so that it can separate it from the others.
