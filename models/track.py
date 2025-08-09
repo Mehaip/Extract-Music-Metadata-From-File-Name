@@ -1,14 +1,12 @@
-from django.db import models
-from pathlib import Path
-from .album import Album
-from .artist import Artist
+from sqlalchemy import Column, Integer, String, ForeignKey
+from .base import Base
 
-class Track(models.Model):
-    filepath = models.CharField(max_length=500)
-    title = models.CharField(max_length=500)
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
-    album = models.ForeignKey(Album, on_delete=models.CASCADE)
-    
-    @property
-    def file_path(self):
-        return Path(self.filepath)
+
+class Track(Base):
+    __tablename__ = "Tracks"
+
+    id = Column(Integer, primary_key = True)
+    filepath = Column(String, nullable = False)
+    title = Column(String, nullable = False)
+    artist = Column(Integer, ForeignKey("artists.id"))
+    album = Column(Integer, ForeignKey("albums.id"))
