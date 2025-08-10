@@ -7,6 +7,6 @@ class Track(Base):
 
     id = Column(Integer, primary_key = True)
     filepath = Column(String, nullable = False)
-    title = Column(String, nullable = False)
+    name = Column(String, nullable = False)
     artist = Column(Integer, ForeignKey("artists.id"))
     album = Column(Integer, ForeignKey("albums.id"))
