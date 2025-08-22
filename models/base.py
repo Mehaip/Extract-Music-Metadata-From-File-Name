@@ -4,6 +4,6 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
+engine = create_engine("sqlite+pysqlite:///db/sono.db", echo=True)
 Session = sessionmaker(bind=engine)
 

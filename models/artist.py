@@ -10,3 +10,12 @@ class Artist(Base):
 
     albums = relationship("Album", back_populates="artist")
     tracks = relationship("Track", back_populates="artist")
+
+    @classmethod
+    def create(cls, name, session):
+        artist = cls(
+            name=name
+        )
+        session.add(artist)
+        session.commit()
+        return artist
