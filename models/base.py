@@ -4,9 +4,6 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-engine = create_engine('sqlite:///db/data.db')
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
 Session = sessionmaker(bind=engine)
 
-def create_all_tables():
-    """Create all tables in the database"""
-    Base.metadata.create_all(engine)
