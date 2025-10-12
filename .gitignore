@@ -1,3 +1,5 @@
 .env
 db
 music
+venv/
+__pycache__

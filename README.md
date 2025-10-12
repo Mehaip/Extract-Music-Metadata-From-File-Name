@@ -23,13 +23,10 @@ eg:
 - 📊 **Multiple output formats** - CSV and JSON exports
 - 📁 **Batch processing** - Handles entire folders of audio files
 
-## Supported Audio Formats
+## Setup
 
-- MP3
-- FLAC
-- M4A/MP4
-- WAV
-- AAC
-- OGG
-- WMA
-- OPUS
+- create .env file with the following info:
+```
+GENIUS_API_TOKEN=
+FOLDER_PATH=
+```
