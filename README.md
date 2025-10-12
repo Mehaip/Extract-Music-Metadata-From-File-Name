@@ -34,5 +34,5 @@ FOLDER_PATH=
 
 ## How to run
 ``
-> python3.12 main.py
+ python3.12 main.py
 ``
