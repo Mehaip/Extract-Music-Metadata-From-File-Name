@@ -3,7 +3,8 @@ from dotenv import load_dotenv
 from audio_organizer import AudioOrganizer
 from metadata_modifier import MetadataModifier
 import sqlite3
-from models import *
+import re
+from pathlib import Path
 # Load environment variables from .env file
 load_dotenv()
 
@@ -38,20 +39,25 @@ def main():
     findings = []
     for song_data in results:
         findings.append(organizer.search_genius(song_data))
-    print(type(findings[0]))
-    print(findings[0])
 
-    #db
 
-    tracks = [Track(**item) for item in findings]
 
 
     # Change file metadata & naming
+    modifier = MetadataModifier()
+    print(findings[0])
 
-    # modifier = MetadataModifier("music/in_rainbow/01 - Radiohead - 15 Step.MP3",123)
-    # modifier.mp3Modifier()
 
-
+    for song in findings:
+        extension = Path(song["filepath"]).suffix.lower()
+        
+        if extension == '.mp3':
+            modifier.mp3Modifier(song)
+        elif extension == '.m4a':
+            modifier.m4aModifier(song)
+        elif extension == '.opus':
+            modifier.opusModifier(song) 
+        
     # Save results
     database_path = os.getenv("DATABASE_PATH", 'db/')
     os.makedirs(database_path, exist_ok=True)
